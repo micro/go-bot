@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/micro/go-bot/input"
 	"github.com/micro/hipchat"
-	"github.com/micro/micro/bot/input"
 )
 
 type hipchatConn struct {

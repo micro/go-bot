@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/micro/micro/bot/input"
+	"github.com/micro/go-bot/input"
 	"github.com/nlopes/slack"
 )
 
