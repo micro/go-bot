@@ -3,6 +3,7 @@ package hipchat
 import (
 	"errors"
 	"sync"
+	"time"
 
 	"github.com/micro/cli"
 	"github.com/micro/go-bot/input"
@@ -109,10 +110,23 @@ func (h *hipchatInput) Start() error {
 	if err != nil {
 		return err
 	}
-
 	h.client = c
 	h.exit = make(chan bool)
 	h.running = true
+
+	go func() {
+		t := time.NewTicker(time.Minute)
+		defer t.Stop()
+
+		for {
+			select {
+			case <-t.C:
+				c.Ping()
+			case <-h.exit:
+				return
+			}
+		}
+	}()
 
 	return nil
 }
