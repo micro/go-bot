@@ -2,6 +2,12 @@
 
 Go Bot is a library used to create commands, inputs and bot services for Micro
 
+## Getting Started
+
+- [Commands](#commands) - Commands are functions executed by the bot based on text based pattern matching.
+- [Inputs](#inputs) - Inputs are plugins for communication e.g Slack, Telegram, IRC, etc.
+- [Services](#services) - Write bots as micro services
+
 ## Commands
 
 Commands are functions executed by the bot based on text based pattern matching.
@@ -98,9 +104,9 @@ go build -i -o micro ./main.go
 CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-w' -i -o micro ./main.go
 ```
 
-## Commands as Services
+## Services
 
-The micro bot supports the ability to create commands as microservices. 
+The micro bot supports the ability to create commands as micro services. 
 
 ### How does it work?
 
