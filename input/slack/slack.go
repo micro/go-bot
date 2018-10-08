@@ -109,8 +109,7 @@ func (p *slackInput) Start() error {
 		return nil
 	}
 
-	api := slack.New(p.token)
-	api.SetDebug(p.debug)
+	api := slack.New(p.token, slack.OptionDebug(p.debug))
 
 	// test auth
 	_, err := api.AuthTest()
