@@ -49,25 +49,25 @@ type CommandService interface {
 }
 
 type commandService struct {
-	c           client.Client
-	serviceName string
+	c    client.Client
+	name string
 }
 
-func NewCommandService(serviceName string, c client.Client) CommandService {
+func NewCommandService(name string, c client.Client) CommandService {
 	if c == nil {
 		c = client.NewClient()
 	}
-	if len(serviceName) == 0 {
-		serviceName = "go.micro.bot"
+	if len(name) == 0 {
+		name = "go.micro.bot"
 	}
 	return &commandService{
-		c:           c,
-		serviceName: serviceName,
+		c:    c,
+		name: name,
 	}
 }
 
 func (c *commandService) Help(ctx context.Context, in *HelpRequest, opts ...client.CallOption) (*HelpResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Command.Help", in)
+	req := c.c.NewRequest(c.name, "Command.Help", in)
 	out := new(HelpResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -77,7 +77,7 @@ func (c *commandService) Help(ctx context.Context, in *HelpRequest, opts ...clie
 }
 
 func (c *commandService) Exec(ctx context.Context, in *ExecRequest, opts ...client.CallOption) (*ExecResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Command.Exec", in)
+	req := c.c.NewRequest(c.name, "Command.Exec", in)
 	out := new(ExecResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -93,16 +93,16 @@ type CommandHandler interface {
 	Exec(context.Context, *ExecRequest, *ExecResponse) error
 }
 
-func RegisterCommandHandler(s server.Server, hdlr CommandHandler, opts ...server.HandlerOption) {
-	type command interface {
+func RegisterCommandHandler(s server.Server, hdlr CommandHandler, opts ...server.HandlerOption) error {
+	type _command interface {
 		Help(ctx context.Context, in *HelpRequest, out *HelpResponse) error
 		Exec(ctx context.Context, in *ExecRequest, out *ExecResponse) error
 	}
 	type Command struct {
-		command
+		_command
 	}
 	h := &commandHandler{hdlr}
-	s.Handle(s.NewHandler(&Command{h}, opts...))
+	return s.Handle(s.NewHandler(&Command{h}, opts...))
 }
 
 type commandHandler struct {
